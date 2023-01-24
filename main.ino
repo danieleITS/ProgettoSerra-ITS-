@@ -7,6 +7,7 @@ BRIGHTNESS "A2"
 LIGHT "7"
 ULTRASONIC_TRIGGER "9"
 ULTRASONIC_ECHO "10"
+LED_WATER "13"
 
 unsigned long startMillis;
 unsigned long eventMillis = 0;
@@ -19,7 +20,10 @@ LiquidCrystal lcd(12, 11, 5, 4, 3, 2);      //controlla pin
 
 float moisture;
 
-long ultrasound_duration,cm;
+int const full_capacity = 20;   //da modificare con l'altezza in cm del serbatoio 
+int const low_water_level = 6;  //da modificare con il livello acqua basso
+int water_level_perc;
+long ultrasound_duration, water_level;
 
 int const nightLed = 450;
 int luxValue = 0;
@@ -32,8 +36,10 @@ void setup() {
     pinMode(WATER, OUTPUT);
     pinMode(BRIGHTNESS, INPUT);  //modifica con umidità dell'aria ???
     pinMode(LIGHT, OUTPUT);
+
     pinMode(ULTRASONIC_TRIGGER, OUTPUT);
     pinMode(ULTRASONIC_ECHO, INPUT);
+    pinMode(LED_WATER, OUTPUT);
 
     lcd.begin(16, 2);
     Serial.begin(9600);
@@ -76,11 +82,19 @@ void loop() {
         delayMicroseconds(10);
         digitalWrite(ULTRASONIC_TRIGGER, LOW);
         ultrasound_duration = pulseIn(ULTRASONIC_ECHO, HIGH);
-        cm = ultrasound_duration / 58;
-        //cm = ((ultrasound_duration/58)/20)*100
-        Serial.println(cm);
+        water_level = full_capacity-(ultrasound_duration / 58);
+        water_level_perc = (water_level/full_capacity)*100;
+        Serial.println(water_level);
+
     }
     
+    //controllo per l'accensione del led di avviso per l'acqua bassa
+    if(water_level <= low_water_level){
+        digitalWrite(LED_WATER, HIGH);
+    } else {
+        digitalWrite(LED_WATER, LOW);
+    }
+
 
     //gestione pompa
     if ((moisture < 60.00 && eventMillis + waitWater <= millis())){

@@ -1,4 +1,3 @@
-aaaaaaaaaaaaaaaaaa
 #include <LiquidCrystal.h>
 
 const int LM35 = A0;

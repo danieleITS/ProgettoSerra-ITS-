@@ -102,4 +102,21 @@ void loop() {
     }
 
     //GESTIONE LCD
+
 }
+
+/*
+#CHECKLIST
+## sensori da implementare
+1) Temperatura 
+2) umidità
+3) ultrasuoni
+4) luce
+
+##LCD
+1) temperatura
+2) umidità
+3) livello acqua + led rosso per livello basso
+
+##APP
+    */

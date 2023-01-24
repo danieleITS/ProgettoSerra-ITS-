@@ -5,6 +5,8 @@ MOISTURE "A1"
 WATER "6"
 BRIGHTNESS "A2"
 LIGHT "7"
+ULTRASONIC_TRIGGER "9"
+ULTRASONIC_ECHO "10"
 
 unsigned long startMillis;
 unsigned long eventMillis = 0;
@@ -27,6 +29,8 @@ void setup() {
     pinMode(WATER, OUTPUT);
     pinMode(BRIGHTNESS, INPUT);  //modifica con umidità dell'aria ???
     pinMode(LIGHT, OUTPUT);
+    pinMode(ULTRASONIC_TRIGGER, OUTPUT);
+    pinMode(ULTRASONIC_ECHO, INPUT);
 
     lcd.begin(16, 2);
     Serial.begin(9600);
@@ -34,7 +38,10 @@ void setup() {
 }
 
 void loop() {
+
     count = count + 1;
+
+    // stampa valori utili a schermo
     if (count == 30000){                        //implementabile con millis()
         moisture = analogRead(MOISTURE);
         moisture = moisture /876.0 * 100;
@@ -52,11 +59,13 @@ void loop() {
         
         tmp_moisture = int(moisture);
         final_str = String(tmp_moisture) + "," + String(tempMap) + "," + String(luxValue) + ",";
+        //inserire livello acqua al posto della luminosità
 
         count = 0;  
         Serial.println(final_str);  //FAI PARSING SU PROCESSING
     }
 
+    //
     if ((moisture < 60.00 && eventMillis + waitWater <= millis())){
         digitalWrite(WATER, HIGH);           //ANALOG O DIGITAL??
         delay();                            //TROVA POSSIBILE ALTERNATIVA CON MILLIS

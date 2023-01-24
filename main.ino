@@ -12,11 +12,14 @@ unsigned long startMillis;
 unsigned long eventMillis = 0;
 unsigned long waitWater = 180000;
 
+
 int tempMap, valTemp;
 
 LiquidCrystal lcd(12, 11, 5, 4, 3, 2);      //controlla pin
 
 float moisture;
+
+long ultrasound_duration,cm;
 
 int const nightLed = 450;
 int luxValue = 0;
@@ -65,7 +68,21 @@ void loop() {
         Serial.println(final_str);  //FAI PARSING SU PROCESSING
     }
 
-    //
+    //controllo livello serbatoio con ultrasuoni
+    if (count == 30000){
+        digitalWrite(ULTRASONIC_TRIGGER, LOW);
+        delayMicroseconds(2);
+        digitalWrite(ULTRASONIC_TRIGGER, HIGH);
+        delayMicroseconds(10);
+        digitalWrite(ULTRASONIC_TRIGGER, LOW);
+        ultrasound_duration = pulseIn(ULTRASONIC_ECHO, HIGH);
+        cm = ultrasound_duration / 58;
+        //cm = ((ultrasound_duration/58)/20)*100
+        Serial.println(cm);
+    }
+    
+
+    //gestione pompa
     if ((moisture < 60.00 && eventMillis + waitWater <= millis())){
         digitalWrite(WATER, HIGH);           //ANALOG O DIGITAL??
         delay();                            //TROVA POSSIBILE ALTERNATIVA CON MILLIS
@@ -73,6 +90,7 @@ void loop() {
         eventMillis = millis();
     }
 
+    //if di test???
     if(Serial.available()){
         char read = Serial.read();
         if (read == 'a'){

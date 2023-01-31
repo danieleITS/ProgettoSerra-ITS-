@@ -1,5 +1,5 @@
 #include <LiquidCrystal.h>
-
+//Prova Michael
 TEMP "A0"           //controlla pin
 MOISTURE "A1"
 WATER "6"

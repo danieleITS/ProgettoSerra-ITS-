@@ -13,8 +13,8 @@ const int led = 1;
 int NUMPIXELS = 60;
 
 unsigned long startMillis;
-unsigned long getValueMillis =unsigned long eventMillis = 0;
- 0;
+unsigned long getValueMillis = 0;
+unsigned long eventMillis = 0;
 unsigned long waitWater = 10000;                      //da aggiornare
 unsigned long eventOpenWater = 0;
 unsigned long stopWater = 6000;                     //da aggiornare

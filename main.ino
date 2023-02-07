@@ -73,7 +73,7 @@ void setup() {
 void loop() {
   if (getValueMillis + 5000 <= millis() || getValueMillis == 0){                     
     moisture = analogRead(moisturePin);
-    moisture = map(moisture, 0, 1023, 0, 100);      //controlla mapping 380 max
+    moisture = map(moisture, 0, 1023, 0, 100);
       
     tmp_moisture = int(moisture);
 
@@ -82,6 +82,7 @@ void loop() {
     tempMap = DHT11.temperature;
 
     brightness = analogRead(bright);
+    brightness = map(brightness, 0, 1023, 0, 100);  //"dipende" da resistenza usata
 
     tempLCD = tempMap;
     umidLCD = tmp_moisture;
@@ -158,8 +159,10 @@ void loop() {
     lcd.print("   Serra  ITS");
     lcd.setCursor(0, 1);
     lcd.print("Temperatura: ");
-    lcd.setCursor(13, 1);
-    lcd.print(tempLCD);    
+    lcd.setCursor(12, 1);
+    lcd.print(tempLCD);
+    lcd.setCursor(15, 1);
+    lcd.print("°");
   }
 
   if(myTimer>5000 && myTimer<5200)
@@ -170,8 +173,10 @@ void loop() {
     lcd.print("   Serra  ITS");
     lcd.setCursor(0, 1);
     lcd.print("Umidita':    ");
-    lcd.setCursor(13, 1);
+    lcd.setCursor(12, 1);
     lcd.print(umidLCD);
+    lcd.setCursor(15, 1);
+    lcd.print("%");
   }
 
   if(myTimer>10200 && myTimer<10400)
@@ -182,8 +187,10 @@ void loop() {
     lcd.print("   Serra  ITS");
     lcd.setCursor(0, 1);
     lcd.print("Luminosita': ");
-    lcd.setCursor(13, 1);
+    lcd.setCursor(12, 1);
     lcd.print(lumLCD);
+    lcd.setCursor(15, 1);
+    lcd.print("%");
   }
 
   if(myTimer>15400 && timerOver == 0){

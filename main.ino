@@ -57,7 +57,12 @@ void setup() {
   
   lcd.begin(16, 2);
   pixels.begin();
-
+ 
+  for(int i=0;i<NUMPIXELS;i++){
+      pixels.setPixelColor(i, pixels.Color(254,254,254));
+      pixels.show();
+  }
+ 
   Serial.begin(9600);
   startMillis = millis();
 }
@@ -182,14 +187,5 @@ void loop() {
     lcd.clear();
     aux = myTimer;
     timerOver = 1;
-  }
-
-  /* ------ LED ------ */
-  //if(//BOTTONE PREMUTO)
-  {
-    for(int i=0;i<NUMPIXELS;i++){
-      pixels.setPixelColor(i, pixels.Color(254,254,254));
-      pixels.show();
-    }
   }
 }

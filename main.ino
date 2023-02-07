@@ -1,7 +1,8 @@
 #include <LiquidCrystal.h>
 #include <Adafruit_NeoPixel.h>
+#include <dht11.h>
 
-const int temp = A2;
+const int temp = 7;
 const int moisturePin = A3;
 const int water = 6;
 const int waterButton = 13;
@@ -13,7 +14,7 @@ const int led = 1;
 int NUMPIXELS = 60;
 
 unsigned long startMillis;
-unsigned long getValueMillis = 0;
+unsigned long getValueMillis =  0;
 unsigned long eventMillis = 0;
 unsigned long waitWater = 10000;                      //da aggiornare
 unsigned long eventOpenWater = 0;
@@ -48,6 +49,8 @@ int tmp_moisture = 0;
 int brightness = 0;
 String final_str;
 
+dht11 DHT11;
+
 void setup() {
   pinMode(temp, INPUT);
   pinMode(moisturePin, INPUT);
@@ -57,12 +60,12 @@ void setup() {
   
   lcd.begin(16, 2);
   pixels.begin();
- 
+
   for(int i=0;i<NUMPIXELS;i++){
       pixels.setPixelColor(i, pixels.Color(254,254,254));
       pixels.show();
   }
- 
+
   Serial.begin(9600);
   startMillis = millis();
 }
@@ -70,12 +73,13 @@ void setup() {
 void loop() {
   if (getValueMillis + 5000 <= millis() || getValueMillis == 0){                     
     moisture = analogRead(moisturePin);
-    moisture = moisture /876.0 * 100;       //controlla mapping
-
-    valTemp = analogRead(temp);
-    tempMap = map(valTemp,20,358,-40,125);  //controlla mapping 
+    moisture = map(moisture, 0, 1023, 0, 100);      //controlla mapping 380 max
       
     tmp_moisture = int(moisture);
+
+    int chk;
+    chk = DHT11.read(temp);
+    tempMap = DHT11.temperature;
 
     brightness = analogRead(bright);
 
@@ -87,7 +91,7 @@ void loop() {
 
     getValueMillis = millis();
 
-    //Serial.println(final_str);
+    Serial.println(final_str);
     Serial.flush();
   }
 

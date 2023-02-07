@@ -34,6 +34,7 @@ int delayval = 100;
 unsigned long aux = 0;
 int timerOver = 0;
 int minBrightness = 0;      //da aggiornare
+int ledOn = 0;
 
 int tempLCD;
 int umidLCD;
@@ -45,9 +46,10 @@ int distance = 0;
 LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, led, NEO_GRB + NEO_KHZ800);
 
-float moisture = 0;
+int moisture = 0;
 int tmp_moisture = 0;
 int brightness = 0;
+int brightness_map = 0;
 String final_str;
 
 dht11 DHT11;
@@ -69,20 +71,18 @@ void setup() {
 void loop() {
   if (getValueMillis + 5000 <= millis() || getValueMillis == 0){                     
     moisture = analogRead(moisturePin);
-    moisture = map(moisture, 0, 1023, 0, 100);
-      
-    tmp_moisture = int(moisture);
+    tmp_moisture = map(moisture, 0, 1023, 0, 100);
 
     int chk;
     chk = DHT11.read(temp);
     tempMap = DHT11.temperature;
 
     brightness = analogRead(bright);
-    brightness = map(brightness, 0, 1023, 0, 100);  //"dipende" da resistenza usata
+    brightness_map = map(brightness, 0, 1023, 0, 100);  //"dipende" da resistenza usata
 
     tempLCD = tempMap;
     umidLCD = tmp_moisture;
-    lumLCD = brightness;
+    lumLCD = brightness_map;
 
     final_str = String(tmp_moisture) + "," + String(tempMap) + "," + String(distance) + ",";
 
@@ -197,17 +197,17 @@ void loop() {
   }
 
   /*LED AUTOMATICO*/
-  if (brightness < minBrightness && led == 0){
+  if (brightness_map < minBrightness && ledOn == 0){
+    ledOn = 1;
     for(int i=0;i<NUMPIXELS;i++){
       pixels.setPixelColor(i, pixels.Color(254,254,254));
       pixels.show();
     }
   }
   
-  if(brightness >= minBrightness && led == 1){
-    for(int i=0;i<NUMPIXELS;i++){
-      pixels.setPixelColor(i, pixels.Color(0,0,0));
-      pixels.show();
-    }
+  if(brightness_map >= minBrightness && ledOn == 1){
+    ledOn = 0;
+    pixels.clear();
+    pixels.show();
   }
 }

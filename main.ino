@@ -33,6 +33,7 @@ int cont = 0;
 int delayval = 100;
 unsigned long aux = 0;
 int timerOver = 0;
+int minBrightness = 0;      //da aggiornare
 
 int tempLCD;
 int umidLCD;
@@ -60,11 +61,6 @@ void setup() {
   
   lcd.begin(16, 2);
   pixels.begin();
-
-  for(int i=0;i<NUMPIXELS;i++){
-      pixels.setPixelColor(i, pixels.Color(254,254,254));
-      pixels.show();
-  }
 
   Serial.begin(9600);
   startMillis = millis();
@@ -198,5 +194,20 @@ void loop() {
     lcd.clear();
     aux = myTimer;
     timerOver = 1;
+  }
+
+  /*LED AUTOMATICO*/
+  if (brightness < minBrightness && led == 0){
+    for(int i=0;i<NUMPIXELS;i++){
+      pixels.setPixelColor(i, pixels.Color(254,254,254));
+      pixels.show();
+    }
+  }
+  
+  if(brightness >= minBrightness && led == 1){
+    for(int i=0;i<NUMPIXELS;i++){
+      pixels.setPixelColor(i, pixels.Color(0,0,0));
+      pixels.show();
+    }
   }
 }
